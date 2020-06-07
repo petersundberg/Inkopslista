@@ -42,10 +42,9 @@ public class CreateListActivity extends AppCompatActivity {
         itemToAddView = findViewById(R.id.itemToAddTextView);
 
         listView = findViewById(R.id.newListListView);  //list for items
-        //listView.setAdapter();
         registerForContextMenu(listView);   //register context menu to listView
+        //listView.setAdapter();
 
-        //skriv listans namn i TextView
         listName = findViewById(R.id.newListNameTextView);
         saveListBtn = findViewById(R.id.saveListBtn);
 
@@ -58,8 +57,6 @@ public class CreateListActivity extends AppCompatActivity {
         addItemBtn.setOnClickListener(new View.OnClickListener() {
             ArrayList<String> newList = new ArrayList<>();
         //ArrayAdapter adap = new ArrayAdapter(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
-
-
 
 
             @Override
@@ -87,7 +84,6 @@ public class CreateListActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
 
         switch (item.getItemId()){
             case R.id.delete_item:
