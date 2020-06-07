@@ -78,7 +78,7 @@ public class CreateListActivity extends AppCompatActivity {
         itemToAddView.addTextChangedListener(itemTextWatcher);
     }
 
-    //assign context menu to list
+    //assign a context menu to list
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
