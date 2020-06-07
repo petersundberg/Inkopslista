@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Inköpslista</string>
+    <string name="writeItemBtn">Skriv ny vara</string>
+    <string name="welcomeMessage">Välkommen till Inköpslista!</string>
+    <string name="whatToDoMessage">Vad vill du göra?</string>
+    <string name="createListMessage">Skapa lista</string>
+    <string name="openListMessage">Öppna lista</string>
+    <string name="newListNameTextView">Listans namn här</string>
+    <string name="addItemBtnMessage">Lägg till</string>
+    <string name="enterNewItemHere">Skriv varans namn här</string>
+</resources>
