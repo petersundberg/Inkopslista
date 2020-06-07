@@ -1,5 +1,6 @@
 package com.example.inkpslista;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +29,8 @@ public class CreateListActivity extends AppCompatActivity {
     private EditText itemToAddView;
     private Button addItemBtn;
     private ListView listView;
+    //private ListViewAdapter adapter;
+
     private Button saveListBtn;
 
     @Override
@@ -35,7 +40,11 @@ public class CreateListActivity extends AppCompatActivity {
 
         addItemBtn = findViewById(R.id.addItemBtn);
         itemToAddView = findViewById(R.id.itemToAddTextView);
-        listView = findViewById(R.id.newListListView);
+
+        listView = findViewById(R.id.newListListView);  //list for items
+        //listView.setAdapter();
+        registerForContextMenu(listView);   //register context menu to listView
+
         //skriv listans namn i TextView
         listName = findViewById(R.id.newListNameTextView);
         saveListBtn = findViewById(R.id.saveListBtn);
@@ -48,6 +57,10 @@ public class CreateListActivity extends AppCompatActivity {
 
         addItemBtn.setOnClickListener(new View.OnClickListener() {
             ArrayList<String> newList = new ArrayList<>();
+        //ArrayAdapter adap = new ArrayAdapter(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
+
+
+
 
             @Override
             public void onClick(View v) {
@@ -58,16 +71,36 @@ public class CreateListActivity extends AppCompatActivity {
                     itemToAddView.setText("");
                     itemToAddView.requestFocus();
                 }
-
-
             }
         });
-
-
         addItemBtn.setEnabled(false);   //avaktivera lägg-till-knappen
         //lägg en TextWatcher på (flera) EditText
         itemToAddView.addTextChangedListener(itemTextWatcher);
     }
+
+    //assign context menu to list
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.item_context_menu, menu);
+    }
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+
+        switch (item.getItemId()){
+            case R.id.delete_item:
+                Toast.makeText(this, "Ta bort från lista", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.option2:
+                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
 
     private TextWatcher itemTextWatcher = new TextWatcher() {
         @Override
