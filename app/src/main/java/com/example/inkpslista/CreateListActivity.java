@@ -29,9 +29,9 @@ public class CreateListActivity extends AppCompatActivity {
     private EditText itemToAddView;
     private Button addItemBtn;
     private ListView listView;
-    //private ListViewAdapter adapter;
-
+    private ArrayAdapter adapter;
     private Button saveListBtn;
+    ArrayList<String> newList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,41 +41,35 @@ public class CreateListActivity extends AppCompatActivity {
         addItemBtn = findViewById(R.id.addItemBtn);
         itemToAddView = findViewById(R.id.itemToAddTextView);
 
-        listView = findViewById(R.id.newListListView);  //list for items
+        listView = findViewById(R.id.newListListView);  //new list for items
         registerForContextMenu(listView);   //register context menu to listView
-        //listView.setAdapter();
 
         listName = findViewById(R.id.newListNameTextView);
         saveListBtn = findViewById(R.id.saveListBtn);
-
+        adapter = new ArrayAdapter(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
         Intent nameIntent = getIntent();
         String nameTime = nameIntent.getStringExtra("dateTime");
         listName.setText(nameTime);
-//        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-//        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        listView.setAdapter(adapter);
 
+        //set onClickListener on btn which adds each item to list
         addItemBtn.setOnClickListener(new View.OnClickListener() {
-            ArrayList<String> newList = new ArrayList<>();
-        //ArrayAdapter adap = new ArrayAdapter(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
-
-
             @Override
             public void onClick(View v) {
                 if (itemToAddView.getText().toString().length() > 0) {
                     newList.add(itemToAddView.getText().toString());    //newList.add(itemToAddView.getText().toString());
-                    ArrayAdapter adapter = new ArrayAdapter(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
-                    listView.setAdapter(adapter);
                     itemToAddView.setText("");
                     itemToAddView.requestFocus();
                 }
             }
         });
-        addItemBtn.setEnabled(false);   //avaktivera lägg-till-knappen
-        //lägg en TextWatcher på (flera) EditText
+        //first disable button for adding items
+        addItemBtn.setEnabled(false);
+        //assign a textWatcher to EditText View (could to multiple Views) to check for length >0
         itemToAddView.addTextChangedListener(itemTextWatcher);
     }
 
-    //assign a context menu to list
+    //assign a context menu to the new list
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -84,10 +78,9 @@ public class CreateListActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
         switch (item.getItemId()){
             case R.id.delete_item:
-                Toast.makeText(this, "Ta bort från lista", Toast.LENGTH_SHORT).show();
+                adapter.remove(adapter.getItem(info.position));
                 return true;
             case R.id.option2:
                 Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
@@ -97,16 +90,16 @@ public class CreateListActivity extends AppCompatActivity {
         }
     }
 
-
+    //textWatcher checking for length >0 in EditText
     private TextWatcher itemTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             //----------
         }
+        //enables itemToAdd-button if anything has been entered in EditText
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String itemCharLength = itemToAddView.getText().toString().trim();
-
             if (itemCharLength.length() > 0) {
                 addItemBtn.setEnabled(true);
             } else {
@@ -120,63 +113,7 @@ public class CreateListActivity extends AppCompatActivity {
 
     };
 
-
-
-
-
 }
-
-
-
-//        //skriv listans namn i TextView
-//        listName = findViewById(R.id.newListNameTextView);
-//        Intent nameIntent = getIntent();
-//        String nameTime = nameIntent.getStringExtra("dateTime");
-//        listName.setText(nameTime);
-
-//        listView = (ListView)findViewById(R.id.newListListView);
-//        final ArrayList<String> arrayList = new ArrayList<>();
-//        arrayList.add("Lägg till vara här");
-//        arrayList.add("Lägg till vara här");
-//        arrayList.add("Lägg till vara här");
-//
-//        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayList);
-//        listView.setAdapter(arrayAdapter);
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(CreateListActivity.this, "clicked item: " + i + " " + arrayList.get(i).toString(),Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        // itemToAddTextView     addItemBtn
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(CreateListActivity.this, "clicked item: " + i + " " + arrayList.get(i).toString(),Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
