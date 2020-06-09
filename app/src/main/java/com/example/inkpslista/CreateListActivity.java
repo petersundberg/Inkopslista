@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import java.util.List;
 public class CreateListActivity extends AppCompatActivity {
 
     private TextView listName;
+    private String itemEntered;
     private EditText itemToAddView;
     private Button addItemBtn;
     private ListView listView;
@@ -67,6 +69,9 @@ public class CreateListActivity extends AppCompatActivity {
         addItemBtn.setEnabled(false);
         //assign a textWatcher to EditText View (could to multiple Views) to check for length >0
         itemToAddView.addTextChangedListener(itemTextWatcher);
+
+        //thos line stops keyboard from pushing up listView
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     //assign a context menu to the new list
@@ -113,6 +118,23 @@ public class CreateListActivity extends AppCompatActivity {
 
     };
 
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        // TODO Auto-generated method stub
+//        super.onSaveInstanceState(outState);
+//
+//        itemEntered = itemToAddView.getText().toString();
+//        outState.putString("itemEntered", itemEntered);
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//
+//        itemToAddView.setText(savedInstanceState.getString("itemEntered"));
+//
+//    }
 }
 
 
