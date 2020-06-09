@@ -3,6 +3,7 @@ package com.example.inkpslista;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,7 +29,7 @@ import java.util.List;
 public class CreateListActivity extends AppCompatActivity {
 
     private TextView listName;
-    private String itemEntered;
+    //private String itemEntered;
     private EditText itemToAddView;
     private Button addItemBtn;
     private ListView listView;
@@ -52,6 +54,7 @@ public class CreateListActivity extends AppCompatActivity {
         Intent nameIntent = getIntent();
         String nameTime = nameIntent.getStringExtra("dateTime");
         listName.setText(nameTime);
+        itemToAddView.requestFocus();
         listView.setAdapter(adapter);
 
         //set onClickListener on btn which adds each item to list
@@ -59,6 +62,10 @@ public class CreateListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (itemToAddView.getText().toString().length() > 0) {
+                    //force keyboard to be visible
+                    InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
                     newList.add(itemToAddView.getText().toString());    //newList.add(itemToAddView.getText().toString());
                     itemToAddView.setText("");
                     itemToAddView.requestFocus();
@@ -70,7 +77,7 @@ public class CreateListActivity extends AppCompatActivity {
         //assign a textWatcher to EditText View (could to multiple Views) to check for length >0
         itemToAddView.addTextChangedListener(itemTextWatcher);
 
-        //thos line stops keyboard from pushing up listView
+        //this line stops keyboard from pushing up listView
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
@@ -87,12 +94,24 @@ public class CreateListActivity extends AppCompatActivity {
             case R.id.delete_item:
                 adapter.remove(adapter.getItem(info.position));
                 return true;
-            case R.id.option2:
-                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+            case R.id.edit_item:
+                String itemValue = (String) adapter.getItem(info.position); //value to edit
+                editSelectedItem(itemValue);
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    public void editSelectedItem(String itemValue){
+        itemToAddView.setText(itemValue); //populate editText with selected item
+        adapter.remove(itemValue);     //remove item from current list, waiting for edited version
+        itemToAddView.setSelection(itemToAddView.getText().length());   //set focus at end of text
+        //force keyboard to be visible
+        InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        //itemToAddView.setSelectAllOnFocus(true);    //itemToAddView.requestFocus();
+        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
     }
 
     //textWatcher checking for length >0 in EditText
