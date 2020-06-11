@@ -41,6 +41,8 @@ public class CreateListActivity extends AppCompatActivity {
     private DBHelper myDbHelper;
     private ArrayAdapter adapter;
     private ArrayList items;
+    ArrayList<String> newList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,7 @@ public class CreateListActivity extends AppCompatActivity {
         listName = findViewById(R.id.newListNameTextView);
         saveListBtn = findViewById(R.id.saveListBtn);
 
-        adapter = new ArrayAdapter<String>(CreateListActivity.this, android.R.layout.simple_list_item_1, items);
+        adapter = new ArrayAdapter<String>(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
         myDbHelper = new DBHelper(this);
 
         Intent nameIntent = getIntent();
@@ -67,8 +69,8 @@ public class CreateListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (itemToAddView.getText().toString().length() > 0) {
-                    String name = listName.getText().toString();
-                    String itemToBuy = itemToAddView.getText().toString();
+//                    String name = listName.getText().toString();
+//                    String itemToBuy = itemToAddView.getText().toString();
 
 
                     //list object
@@ -77,11 +79,22 @@ public class CreateListActivity extends AppCompatActivity {
                     //add to database
                     //boolean status = myDbHelper.addListToDb(list);
 
-                    items.add(itemToBuy);
 
+                    newList.add(itemToAddView.getText().toString());
                     itemToAddView.setText("");
                     itemToAddView.requestFocus();
                     listView.setSelection(adapter.getCount() - 1);
+
+                    //add item to list
+                    myDbHelper.insertItemsInList(itemToAddView.getText().toString());
+
+
+
+
+//                    items.add(itemToBuy);
+//                    itemToAddView.setText("");
+//                    itemToAddView.requestFocus();
+//                    listView.setSelection(adapter.getCount() - 1);
                     //updateViews();
 
                 }
@@ -98,11 +111,11 @@ public class CreateListActivity extends AppCompatActivity {
         myDbHelper = new DBHelper(this);
 
         //Set data to list view
-        try {
-            updateViews();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            updateViews();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         //save list
         saveListBtn.setOnClickListener(new View.OnClickListener() {
@@ -110,8 +123,9 @@ public class CreateListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //info form views
 
-                //student object
-                ListModel listToAdd = new ListModel(-1,listName.getText().toString(),items);
+                //list object
+                ListModel listToAdd = new ListModel(-1,listName.getText().toString(), newList);
+
 
                 //add to db
                 boolean status = false;
@@ -125,13 +139,62 @@ public class CreateListActivity extends AppCompatActivity {
                 //control
                 Toast.makeText(CreateListActivity.this, "Status: " + status, Toast.LENGTH_SHORT).show();
 
+                //boolean status = false;
+
+
+//                try {
+//                    myDbHelper.addListToDb(listToAdd);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+
+
+//                try {
+//                    status = myDbHelper.addListToDb(listToAdd);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+
+
                 try {
                     updateViews();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+
             }
         });
+
+
+//        //save list
+//        saveListBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //info form views
+//
+//                //student object
+//                ListModel listToAdd = new ListModel(-1,listName.getText().toString(),items);
+//
+//                //add to db
+//                boolean status = false;
+//
+//                try {
+//                    status = myDbHelper.addListToDb(listToAdd);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                //control
+//                Toast.makeText(CreateListActivity.this, "Status: " + status, Toast.LENGTH_SHORT).show();
+//
+////                try {
+////                    updateViews();
+////                } catch (JSONException e) {
+////                    e.printStackTrace();
+////                }
+//            }
+//        });
 
         /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

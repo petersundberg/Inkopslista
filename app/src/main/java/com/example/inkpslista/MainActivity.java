@@ -31,6 +31,10 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String LIST_NAME_TABLE = "LIST_NAME_TABLE";
+    public static final String COL_LIST_NAME = "LIST_NAME";
+    private static final String COL_GROUP_ID = "GROUP_ID";
+
     private Button createListBtn;
     private Button showLists;
     Calendar calendar;
@@ -56,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, CreateListActivity.class);
                 i.putExtra("dateTime", nameTime);
                 startActivity(i);
+
+
             }
         });
 

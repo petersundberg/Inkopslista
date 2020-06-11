@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -18,10 +19,15 @@ import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final String LIST_TABLE = "LIST_TABLE";
+    public static final String LIST_NAME_TABLE = "LIST_NAME_TABLE";
     public static final String COL_LIST_NAME = "LIST_NAME";
-    public static final String COL_ID = "ID";
-    public static final String COL_ITEMS = "ITEMS";
+    private static final String COL_GROUP_ID = "GROUP_ID";
+
+    private static final String ITEMS_TABLE = "ITEMS_TABLE";
+    private static final String COL_ITEM_ID = "COL_ITEM_ID";
+    private static final String COL_ITEM = "COL_ITEM";
+
+
 
     public DBHelper(@Nullable Context context) {
         super(context, "list.db", null, 1);
@@ -29,9 +35,42 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String create_table_query = "CREATE TABLE " + LIST_TABLE + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_LIST_NAME + " TEXT," + COL_ITEMS + " TEXT)";
-        db.execSQL(create_table_query);
+
+        //Original code:    String create_table_query = "CREATE TABLE " + LIST_TABLE + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_LIST_NAME + " TEXT," + COL_ITEMS + " TEXT)";
+//------------------------------------
+        //create table containing only list name
+        //String create_table_queryLISTNAME = "CREATE TABLE " + LIST_NAME_TABLE + " (" + COL_GROUP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_LIST_NAME + " TEXT)";
+
+
+//        //update table containing only list name
+//        String update_table_queryLISTNAME = "UPDATE TABLE " + LIST_NAME_TABLE + " (" + COL_GROUP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_LIST_NAME + " TEXT)";
+//        //create table containing each lists items
+//        String update_table_queryITEMS = "UPDATE TABLE " + ITEMS_TABLE + " (" + ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_ITEM + " TEXT, " + COL_GROUP_ID + ", FOREIGN KEY (COL_GROUP_ID) REFERENCES LIST_NAME_TABLE (COL_GROUP_ID))";
+
+//-------------------------------------
+
+        String create_table_queryLISTNAME = "CREATE TABLE " + LIST_NAME_TABLE + " (" + COL_GROUP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_LIST_NAME + " TEXT)";
+        db.execSQL(create_table_queryLISTNAME);
+
     }
+
+
+    public void insertItemsInList(String db){
+
+        //create table containing each lists items
+        //String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_ITEM + " TEXT, " + " FOREIGN KEY (COL_GROUP_ID) REFERENCES LIST_NAME_TABLE (COL_GROUP_ID))";
+
+        //String insert_table_queryITEMS = "INSERT INTO " + ITEMS_TABLE + " + COL_ITEM + " TEXT, " + " COL_GROUP_ID) VALUES + "'" + itemToAddView.getText().toString() + "'" + );
+
+
+        //db.execSQL(insert_table_queryITEMS);
+
+
+    }
+
+
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -42,31 +81,64 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
-        cv.put(COL_LIST_NAME, listToAdd.getListName());
+
+        cv.put(COL_LIST_NAME, listToAdd.getListName());   //cv.put(LIST_NAME_TABLE, listToAdd.getListName());
+
+        long insertStatus = db.insert(LIST_NAME_TABLE, null, cv);
+
+            JSONObject json = new JSONObject();
+            json.put("newListToJSON", new JSONArray(listToAdd.getItemsList()));
+              cv.put(COL_ITEM, json.toString());
+
+
+            if (insertStatus == -1) {
+                db.close();
+                return false;
+            } else {
+                db.close();
+                return true;
+            }
+    }
+
+
+
+            //insertStatus = db.insert(ITEMS_TABLE, null, cv);
+
+//            for (int i = 0; i < jsonArrayList.length(); i++){
+//            cv.put(COL_ITEM, jsonArrayList.indexOf(i));
+//            insertStatus = db.insert(ITEMS_TABLE, null, cv);
+//            }
+
+//        for (int i = 0; i < jsonArrayList.length(); i++){
+//            cv.put(COL_ITEM, listToAdd.getItemsList().indexOf(i));
+//            insertStatus = db.insert(ITEMS_TABLE, null, cv);
+//        }
+
+//            for (int i = 0; i < listToAdd.getItemsList().size(); i++){
+//            cv.put(COL_ITEM, listToAdd.getItemsList().indexOf(i));
+//            insertStatus = db.insert(ITEMS_TABLE, null, cv);
+//            }
 
         //JSON
-        JSONObject json = new JSONObject();
-        json.put("items", new JSONArray(listToAdd.getItemsList()));
+//        JSONObject json = new JSONObject();
+//        json.put("newList", new JSONArray(listToAdd.getItemsList()));
 
-        cv.put(COL_ITEMS,json.toString());
+        //cv.put(COL_ITEMS,json.toString());
 
-        long insertStatus = db.insert(LIST_TABLE, null, cv);
+        //long insertStatus = db.insert(LIST_NAME_TABLE, null, cv);
 
-        if (insertStatus == -1) {
-            db.close();
-            return false;
-        } else {
-            db.close();
-            return true;
-        }
-    }
+
+
+
+
+
 
     public List<ListModel> getAllLists() throws JSONException {
 
         List<ListModel> result = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String get_all_student_query = "SELECT * FROM " + LIST_TABLE;
+        String get_all_student_query = "SELECT * FROM " + LIST_NAME_TABLE;
 
         Cursor cursor = db.rawQuery(get_all_student_query, null);
 
