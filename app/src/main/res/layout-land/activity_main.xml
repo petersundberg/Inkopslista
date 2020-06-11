@@ -45,8 +45,6 @@
         android:layout_marginBottom="16dp"
         android:ems="10"
         android:gravity="center_horizontal|center_vertical"
-        android:hint="@string/welcomeMessage"
-        android:importantForAutofill="no"
         android:inputType="textMultiLine"
         android:text="@string/welcomeMessage"
         android:textSize="30sp"
@@ -54,13 +52,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.20" />
+        app:layout_constraintVertical_bias="0.20"
+        android:importantForAutofill="no" />
 
     <TextView
         android:id="@+id/whatToDoTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         android:text="@string/whatToDoMessage"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
