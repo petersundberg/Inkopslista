@@ -29,7 +29,6 @@ public class DBHelperItems extends SQLiteOpenHelper {
     private static final String COL_ITEM = "COL_ITEM";
 
 
-
     public DBHelperItems(@Nullable Context context) {
         super(context, "items.db", null, 1);
     }
@@ -58,16 +57,12 @@ public class DBHelperItems extends SQLiteOpenHelper {
 //        String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_ITEM + " TEXT)";
 //        db.execSQL(create_table_queryITEMS);
 
-//        db.execSQL("create table "+TABLE_WORKDETAILS+"(ID INTEGER PRIMARY KEY , Project TEXT, WorkDescription TEXT, Per Text, TimeIn DATETIME, TimeOut DATETIME,TotalHours DATETIME, TableInfo_id INTEGER, FOREIGN KEY(TableInfo_id)REFERENCES TABLE_INFO(ID)");
-//        db.execSQL("create table "+TABLE_WORKDETAILS+"(ID INTEGER PRIMARY KEY , Project TEXT, WorkDescription TEXT, Per Text, TimeIn DATETIME, TimeOut DATETIME,TotalHours DATETIME," +
-//                " TableInfo_id INTEGER, FOREIGN KEY(TableInfo_id)REFERENCES TABLE_INFO(ID))");
 
         //gör nåt i alla fall:
 //        String create_table_queryITEMS = " CREATE TABLE " + "ITEMS_TABLE" + "(COL_ITEM_ID INTEGER , COL_ITEM TEXT, COL_GROUP_ID INTEGER, FOREIGN KEY(COL_GROUP_ID) REFERENCES LIST_NAME_TABLE(COL_GROUP_ID))";
 //        db.execSQL(create_table_queryITEMS);
-
-
         //String create_table_queryITEMS = " CREATE TABLE " + "ITEMS_TABLE" + "(COL_ITEM_ID INTEGER PRIMARY KEY AUTOINCREMENT , COL_ITEM TEXT, COL_GROUP_ID INTEGER, FOREIGN KEY(COL_GROUP_ID) REFERENCES LIST_NAME_TABLE(COL_GROUP_ID))";
+
         String create_table_queryITEMS = " CREATE TABLE " + "ITEMS_TABLE" + "(" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " + COL_ITEM + " TEXT , " + COL_GROUP_ID + " INTEGER , " + "FOREIGN KEY(COL_GROUP_ID) REFERENCES LIST_NAME_TABLE(COL_GROUP_ID))";
         db.execSQL(create_table_queryITEMS);
       //String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_GROUP_ITEM_ID + " INTEGER, FOREIGN KEY REFERENCES LIST_NAME_TABLE (COL_GROUP_ID), " + COL_ITEM + " TEXT)";
