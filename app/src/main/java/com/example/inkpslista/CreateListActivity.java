@@ -2,7 +2,6 @@ package com.example.inkpslista;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +38,7 @@ public class CreateListActivity extends AppCompatActivity {
     private Button addItemBtn;
     private ListView listView;
     private Button saveListBtn;
-    private DBHelper myDbHelper;
+    private DBHelperItems myDbHelper;
     private ArrayAdapter adapter;
     private ArrayList items;
     ArrayList<String> newList = new ArrayList<>();
@@ -56,7 +56,7 @@ public class CreateListActivity extends AppCompatActivity {
         saveListBtn = findViewById(R.id.saveListBtn);
 
         adapter = new ArrayAdapter<String>(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
-        myDbHelper = new DBHelper(this);
+        DBHelperItems myDbHelperItems = new DBHelperItems(this);       //myDbHelper = new DBHelper(this);    //DBHelper myDbHelper = new DBHelper(this);
 
         Intent nameIntent = getIntent();
         String nameTime = nameIntent.getStringExtra("dateTime");
@@ -69,15 +69,42 @@ public class CreateListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (itemToAddView.getText().toString().length() > 0) {
+
+                    String itemToBuy = itemToAddView.getText().toString();
 //                    String name = listName.getText().toString();
 //                    String itemToBuy = itemToAddView.getText().toString();
-
 
                     //list object
                     //ListModel list = new ListModel("testList", itemToBuy);
 
                     //add to database
                     //boolean status = myDbHelper.addListToDb(list);
+//
+//                    newList.add(itemToAddView.getText().toString());
+//                    itemToAddView.setText("");
+//                    itemToAddView.requestFocus();
+//                    listView.setSelection(adapter.getCount() - 1);
+
+//--------------------------------------------------------------
+                    //Create database "items"
+                    //declare empty items
+                    ListModel items;
+                    //Reference database helper
+                    DBHelperItems dbHelperItems = new DBHelperItems(CreateListActivity.this);
+
+                    //Init listname
+                    items = new ListModel(-1, itemToBuy, -1);
+
+                    //boolean status = myDbHelper.addStudentToDb(studentToAdd);
+
+                    boolean addedItem = false;
+                    try {
+                        dbHelperItems.addItemToDb(items);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(CreateListActivity.this, "ADDED ITEM: " + addedItem, Toast.LENGTH_SHORT).show();
+
 
 
                     newList.add(itemToAddView.getText().toString());
@@ -85,8 +112,9 @@ public class CreateListActivity extends AppCompatActivity {
                     itemToAddView.requestFocus();
                     listView.setSelection(adapter.getCount() - 1);
 
+
                     //add item to list
-                    myDbHelper.insertItemsInList(itemToAddView.getText().toString());
+                    //myDbHelper.insertItemsInList(itemToAddView.getText().toString());
 
 
 
@@ -108,7 +136,7 @@ public class CreateListActivity extends AppCompatActivity {
         //inits
         saveListBtn = findViewById(R.id.saveListBtn);
         listView = findViewById(R.id.newListListView);
-        myDbHelper = new DBHelper(this);
+        myDbHelperItems = new DBHelperItems(this);
 
         //Set data to list view
 //        try {
@@ -124,17 +152,17 @@ public class CreateListActivity extends AppCompatActivity {
                 //info form views
 
                 //list object
-                ListModel listToAdd = new ListModel(-1,listName.getText().toString(), newList);
+               // ListModel listToAdd = new ListModel(-1,listName.getText().toString(), newList);   ///////////////////////////////////////////////////
 
 
                 //add to db
                 boolean status = false;
 
-                try {
-                    status = myDbHelper.addListToDb(listToAdd);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    status = myDbHelper.addListToDb(listToAdd);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 
                 //control
                 Toast.makeText(CreateListActivity.this, "Status: " + status, Toast.LENGTH_SHORT).show();

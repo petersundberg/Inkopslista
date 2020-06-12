@@ -17,20 +17,21 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBHelper extends SQLiteOpenHelper {
+public class DBHelperItems extends SQLiteOpenHelper {
 
     public static final String LIST_NAME_TABLE = "LIST_NAME_TABLE";
     public static final String COL_LIST_NAME = "LIST_NAME";
     private static final String COL_GROUP_ID = "GROUP_ID";
 
     private static final String ITEMS_TABLE = "ITEMS_TABLE";
+    private static final String COL_GROUP_ITEM_ID = "COL_GROUP_ITEM_ID";
     private static final String COL_ITEM_ID = "COL_ITEM_ID";
     private static final String COL_ITEM = "COL_ITEM";
 
 
 
-    public DBHelper(@Nullable Context context) {
-        super(context, "Listname.db", null, 1);
+    public DBHelperItems(@Nullable Context context) {
+        super(context, "items.db", null, 1);
     }
 
 
@@ -50,11 +51,41 @@ public class DBHelper extends SQLiteOpenHelper {
 
 //-------------------------------------
 
-        String create_table_queryLISTNAME = "CREATE TABLE " + LIST_NAME_TABLE + " (" + COL_GROUP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_LIST_NAME + " TEXT)";
-        db.execSQL(create_table_queryLISTNAME);
+//        String create_table_queryLISTNAME = "CREATE TABLE " + LIST_NAME_TABLE + " (" + COL_GROUP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_LIST_NAME + " TEXT)";
+//        db.execSQL(create_table_queryLISTNAME);
 
+//skapar table:
+//        String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_ITEM + " TEXT)";
+//        db.execSQL(create_table_queryITEMS);
+
+//        db.execSQL("create table "+TABLE_WORKDETAILS+"(ID INTEGER PRIMARY KEY , Project TEXT, WorkDescription TEXT, Per Text, TimeIn DATETIME, TimeOut DATETIME,TotalHours DATETIME, TableInfo_id INTEGER, FOREIGN KEY(TableInfo_id)REFERENCES TABLE_INFO(ID)");
+//        db.execSQL("create table "+TABLE_WORKDETAILS+"(ID INTEGER PRIMARY KEY , Project TEXT, WorkDescription TEXT, Per Text, TimeIn DATETIME, TimeOut DATETIME,TotalHours DATETIME," +
+//                " TableInfo_id INTEGER, FOREIGN KEY(TableInfo_id)REFERENCES TABLE_INFO(ID))");
+
+        //gör nåt i alla fall:
+//        String create_table_queryITEMS = " CREATE TABLE " + "ITEMS_TABLE" + "(COL_ITEM_ID INTEGER , COL_ITEM TEXT, COL_GROUP_ID INTEGER, FOREIGN KEY(COL_GROUP_ID) REFERENCES LIST_NAME_TABLE(COL_GROUP_ID))";
+//        db.execSQL(create_table_queryITEMS);
+
+
+        //String create_table_queryITEMS = " CREATE TABLE " + "ITEMS_TABLE" + "(COL_ITEM_ID INTEGER PRIMARY KEY AUTOINCREMENT , COL_ITEM TEXT, COL_GROUP_ID INTEGER, FOREIGN KEY(COL_GROUP_ID) REFERENCES LIST_NAME_TABLE(COL_GROUP_ID))";
+        String create_table_queryITEMS = " CREATE TABLE " + "ITEMS_TABLE" + "(" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " + COL_ITEM + " TEXT , " + COL_GROUP_ID + " INTEGER , " + "FOREIGN KEY(COL_GROUP_ID) REFERENCES LIST_NAME_TABLE(COL_GROUP_ID))";
+        db.execSQL(create_table_queryITEMS);
+      //String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_GROUP_ITEM_ID + " INTEGER, FOREIGN KEY REFERENCES LIST_NAME_TABLE (COL_GROUP_ID), " + COL_ITEM + " TEXT)";
+
+
+//puts values in both tables, but not group id:
 //        String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_ITEM + " TEXT, " +
 //                " FOREIGN KEY (COL_GROUP_ID) REFERENCES LIST_NAME_TABLE (COL_GROUP_ID))";
+//        db.execSQL(create_table_queryITEMS);
+
+
+
+        //String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +         COL_ITEM + " TEXT, " +           " FOREIGN KEY (COL_GROUP_ID) REFERENCES LIST_NAME_TABLE (COL_GROUP_ID))";
+
+        //String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_GROUP_ITEM_ID + " INTEGER, FOREIGN KEY REFERENCES LIST_NAME_TABLE (COL_GROUP_ID), " + COL_ITEM + " TEXT)";
+        //db.execSQL(create_table_queryITEMS);
+
+//        String create_table_queryITEMS = "CREATE TABLE " + ITEMS_TABLE + " (" + COL_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_ITEM + " TEXT, " + " FOREIGN KEY (COL_GROUP_ID) REFERENCES LIST_NAME_TABLE (COL_GROUP_ID))";
 //        db.execSQL(create_table_queryITEMS);
 
     }
@@ -109,22 +140,22 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean addItemToDb(ListModel listToAdd) throws JSONException {
+    public boolean addItemToDb(ListModel itemToAdd) throws JSONException {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
 
-        cv.put(COL_ITEM, listToAdd.getItem());   //cv.put(LIST_NAME_TABLE, listToAdd.getListName());
+        cv.put(COL_ITEM, itemToAdd.getItem());  //cv.put(LIST_NAME_TABLE, listToAdd.getListName());
 
         long insertStatus = db.insert(ITEMS_TABLE, null, cv);
 
-            if (insertStatus == -1) {
-                db.close();
-                return false;
-            } else {
-                db.close();
-                return true;
-            }
+        if (insertStatus == -1) {
+            db.close();
+            return false;
+        } else {
+            db.close();
+            return true;
+        }
     }
 
 
@@ -134,7 +165,7 @@ public class DBHelper extends SQLiteOpenHelper {
 //              cv.put(COL_ITEM, json.toString());
 
 
-            //insertStatus = db.insert(ITEMS_TABLE, null, cv);
+    //insertStatus = db.insert(ITEMS_TABLE, null, cv);
 
 //            for (int i = 0; i < jsonArrayList.length(); i++){
 //            cv.put(COL_ITEM, jsonArrayList.indexOf(i));
@@ -151,13 +182,13 @@ public class DBHelper extends SQLiteOpenHelper {
 //            insertStatus = db.insert(ITEMS_TABLE, null, cv);
 //            }
 
-        //JSON
+    //JSON
 //        JSONObject json = new JSONObject();
 //        json.put("newList", new JSONArray(listToAdd.getItemsList()));
 
-        //cv.put(COL_ITEMS,json.toString());
+    //cv.put(COL_ITEMS,json.toString());
 
-        //long insertStatus = db.insert(LIST_NAME_TABLE, null, cv);
+    //long insertStatus = db.insert(LIST_NAME_TABLE, null, cv);
 
 
 
@@ -220,7 +251,7 @@ public class DBHelper extends SQLiteOpenHelper {
 //            cursor.close();
 //            return true;
 //        }
-    return true;
+        return true;
     }
 
 

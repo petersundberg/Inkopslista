@@ -11,8 +11,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.json.JSONException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button createListBtn;
     private Button showLists;
+    private DBHelper myDbHelper;
     Calendar calendar;
 
     @Override
@@ -47,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         createListBtn = findViewById(R.id.createListBtn);
         showLists = findViewById(R.id.showLists);
 
+        //adapter = new ArrayAdapter<String>(CreateListActivity.this, android.R.layout.simple_list_item_1, newList);
+        DBHelper myDbHelper = new DBHelper(this);
+
         //create onClickListener to create new List
         createListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,10 +63,46 @@ public class MainActivity extends AppCompatActivity {
                 String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
                 String nameTime = "Handla " + currentDate + ", " + currentTime;
 
+//                //goto new activity to populate new List
+//                Intent i = new Intent(MainActivity.this, CreateListActivity.class);
+//                i.putExtra("dateTime", nameTime);
+//                startActivity(i);
+
+                //Create database "Listname"
+                //declare empty list
+                Listname listName;
+                //Reference database helper
+                DBHelper dbHelper = new DBHelper(MainActivity.this);
+                //Init listname
+                listName = new Listname(-1, nameTime);
+
+                //Add listname (boolean to check for errors)
+                boolean addedListname = false;
+                try {
+                    addedListname = dbHelper.addListnameToDb(listName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(MainActivity.this, "ADDED LISTNAME: " + addedListname, Toast.LENGTH_SHORT).show();
+
+
+
+
+
+//                //Add listname (boolean to check for errors)
+//                boolean addedListname = false;
+//                try {
+//                    addedListname = dbHelper.addListnameToDb(listName);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+
+
                 //goto new activity to populate new List
                 Intent i = new Intent(MainActivity.this, CreateListActivity.class);
                 i.putExtra("dateTime", nameTime);
                 startActivity(i);
+
 
 
             }

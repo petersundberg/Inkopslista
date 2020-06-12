@@ -1,48 +1,49 @@
 package com.example.inkpslista;
 
-import java.util.ArrayList;
 
 public class ListModel {
 
     private int id;
-    private String listName;
-    private ArrayList<String> itemsList;
+    private String item;
+    private int goupId;
 
-    public ListModel(int id, String listName, ArrayList<String> itemsList) {
+
+    public ListModel(int id, String item, int goupId) {
         this.id = id;
-        this.listName = listName;
-        this.itemsList = itemsList;
+        this.item = item;
+        this.goupId = goupId;
     }
 
     public int getId() {
         return id;
     }
 
+    public String getItem() {
+        return item;
+    }
+
+    public int getGoupId() {
+        return goupId;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getListName() {
-        return listName;
+    public void setItem(String item) {
+        this.item = item;
     }
 
-    public ArrayList<String> getItemsList() {
-        return itemsList;
-    }
-
-    public void setListName(String listName) {
-        this.listName = listName;
-    }
-
-    public void setItemsList(ArrayList<String> itemsList) {
-        this.itemsList = itemsList;
+    public void setGoupId(int goupId) {
+        this.goupId = goupId;
     }
 
     @Override
     public String toString() {
         return "ListModel{" +
-                "listName='" + listName + '\'' +
-                ", itemsList=" + itemsList +
+                "id=" + id +
+                ", item='" + item + '\'' +
+                ", goupId=" + goupId +
                 '}';
     }
 }
